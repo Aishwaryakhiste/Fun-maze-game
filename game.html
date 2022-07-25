@@ -1,0 +1,233 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src='Box2dWeb.min.js'></script>
+    <script src="Three.js"></script>
+    <script src="keyboard.js"></script>
+    <script src="jquery.js"></script>
+    <script src="maze.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
+    <script src="bower_components/firebaseui/dist/firebaseui.js"></script>
+    <script src="bitcoin.js"></script>
+    <script srec="coin.js"></script>
+    <link rel="stylesheet" href="profile.css">
+    <style>
+        html {
+            font-size: 62.5%
+        }
+        
+        body {
+            background: black;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica';
+        }
+        
+        #instructions {
+            background-color: rgba(0, 0, 0, 0.75);
+            color: white;
+            text-align: center;
+            padding: 3.2rem;
+            margin: 0rem;
+            display: inline;
+            border: 0.2rem solid white;
+        }
+        
+        #help {
+            position: absolute;
+            left: 0rem;
+            bottom: 0rem;
+            padding: 0.4rem;
+            color: white;
+        }
+        
+        #level {
+            font-size: 2rem;
+            position: absolute;
+            left: 0rem;
+            top: 0rem;
+            padding: 0.4rem;
+            color: yellow;
+            font-weight: bold;
+        }
+        
+        #score {
+            font-size: 2rem;
+            position: absolute;
+            left: 0rem;
+            top: 2rem;
+            padding: 0.4rem;
+            color: yellow;
+            font-weight: bold;
+        }
+        /* #profile {
+            float: right;
+        }
+        
+        #profile {
+            position: absolute;
+            right: 0rem;
+            top: 0rem;
+            padding: 0.4rem;
+            color: white;
+        }
+        
+        #profileId {
+            border-radius: 2rem;
+            padding: 1rem;
+            width: 4rem;
+        }
+         */
+        
+        *,
+        *::after,
+        *::before {
+            box-sizing: border-box;
+        }
+        
+        .model {
+            position: fixed;
+            top: 30rem;
+            left: 65rem;
+            transform: translate(-50%, -50%);
+            border: 0.1rem solid black;
+            border-radius: 1rem;
+            background-image: url("images/over.gif");
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 40rem;
+            height: 30rem;
+            visibility: hidden;
+        }
+        
+        .play-again {
+            margin-top: 10%;
+            background-color: rgb(146, 23, 146);
+            color: white;
+            text-shadow: 2rem rgb(81, 240, 240);
+            font-weight: bolder;
+            border-radius: 20%;
+        }
+        
+        .leader-board {
+            visibility: hidden;
+            color: rgb(10, 10, 9);
+            width: max-content;
+            height: auto;
+            background-color: aliceblue;
+        }
+        /* #signOut {
+            height: fit-content;
+            width: fit-content;
+            background-color: gray;
+            font-size: small;
+        } */
+        
+        #your-score {
+            margin-top: 5%;
+            font-size: 2rem;
+        }
+    </style>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
+    <link rel="stylesheet" href="profile.css">
+</head>
+
+<body>
+    <div id='instructions'>
+        How to play Astray:
+        <br><br> Use the arrow keys to move the ball and find the exit to the maze.
+        <br><br> Vim trainees: h, j, k, l
+    </div>
+
+    <div id='help'>
+        Hold down the 'I' key for instructions.
+    </div>
+
+    <div id='level'>
+        Level 1
+    </div>
+    <div id="score">
+        Score :<span id="scoreValue"></span>
+    </div>
+    <button type="submit" id="btn-leader" class="leader" onclick="showLeaderBoard()">Leader Board</button>
+    <button type="submit" id="end-game" class="leader" onclick="window.location.href ='home.html';">End Game</button>
+
+    <div id="leader-board">
+        <button type="button" id="hide" onclick="HideLeaderBoard()">&times;</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Email</th>
+                    <th>Score</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody id="tbody1" class="scroll">
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="action">
+        <div class="profile" onclick="menuToggle()">
+            <img src="profile.PNG">
+            <div id="initial"></div>
+        </div>
+        <div class="menu" id="menu">
+            <h3>Gamer</h3>
+            <ul id="gamer">
+                <li id="email"></li>
+                <div id="sign-out-btn">
+                    <button type="submit" id="signOut" onclick="logout()">Sign Out</button>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+
+
+    <div class="model" id="modal">
+        <div class="model-header">
+
+
+
+            <center>
+                <div class="title" id="your-score">Your Score :<span id="endScore"></span>
+                </div>
+                <button class="play-again" onclick="playAgain()">Play Again</button></center>
+
+        </div>
+        <div class="model-body"></div>
+    </div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-auth.js"></script>
+
+    <script src="firebase.js"></script>
+    <script type="module" src="main.mjs"></script>
+    <script src="home.js"></script>
+    <script>
+        function menuToggle() {
+            const toggleMenu = document.querySelector('.menu');
+            toggleMenu.classList.toggle('active')
+        }
+
+        function playAgain() {
+            gameOver = false;
+            setTimeout("location.reload(true);", 100)
+            console.log("play again")
+        }
+    </script>
+
+    <script type="module" src="leader.mjs"></script>
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<html>
+<title></title>
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="profile.css">
+    <style>
+        html {
+            font-size: 10px;
+        }
+        
+        button {
+            background-color: aquamarine;
+            margin-top: 23%;
+            height: 5rem;
+            width: 20rem;
+            font-size: 2rem;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            border-radius: 1rem;
+        }
+        
+        body {
+            background-image: url('images/home.gif');
+            background-size: cover;
+            /* height: 100vh; */
+            padding: 0;
+            margin: 0;
+        }
+        
+        h1 {
+            color: antiquewhite;
+        }
+        
+        #signOut {
+            height: fit-content;
+            width: fit-content;
+            background-color: gray;
+            font-size: small;
+        }
+    </style>
+    <script>
+        window.addEventListener("visibilitychange", function() {
+            var audio = document.getElementById("my-audio-tag");
+            audio.play();
+            if (document.visibilityState == "visible") {
+                document.getElementById('my-audio-tag').muted = false
+
+            }
+            if (document.visibilityState == "hidden") {
+
+                document.getElementById('my-audio-tag').muted = true
+
+            }
+            document.title = document.visibilityState;
+
+
+        })
+    </script>
+</head>
+
+<body>
+    <!-- <embed name="GoodEnough" src="audio/oggy.mp3" loop="true" hidden="true" autostart="true"> -->
+    <audio id="my-audio-tag"><source src="audio/oggy.mp3"></audio>
+    <button type="submit" id="btn-leader" onclick="showLeaderBoard()">Leader Board</button>
+    <center>
+        <div id="leader-board">
+            <button type="button" id="hide" onclick="HideLeaderBoard()">&times;</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Email</th>
+                        <th>Score</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody1">
+
+                </tbody>
+            </table>
+        </div>
+    </center>
+    <center>
+
+        <h1>Welcome To The Fun Maze Game</h1>
+        <form action="game.html">
+            <button type="submit" id="start-game" onclick="">Start Game</button>
+
+        </form>
+
+    </center>
+
+    <div class="action">
+        <div class="profile" onclick="menuToggle();">
+            <img src="profile.PNG">
+            <div id="initial"></div>
+        </div>
+        <div class="menu" id="menu">
+            <h3>Gamer</h3>
+            <ul id="gamer">
+                <li id="email"></li>
+                <div id="sign-out-btn">
+                    <button type="submit" id="signOut" onclick="logout()">Sign Out</button>
+                </div>
+
+            </ul>
+        </div>
+    </div>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-auth.js"></script>
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"; import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"; const firebaseConfig = { apiKey:"AIzaSyDFmXn_JMPKDgu_ELDGUkEfqhkWmY3eCqM",
+        authDomain: "auth-e64cd.firebaseapp.com", databaseURL: "https://auth-e64cd-default-rtdb.firebaseio.com", projectId: "auth-e64cd", storageBucket: "auth-e64cd.appspot.com", messagingSenderId: "907300081039", appId: "1:907300081039:web:2e1623c9b3b8a9cc728ffa",
+        measurementId: "G-DH0175KZF1" }; (function(){ firebase.auth().onAuthStateChanged(function(user) { if (user) { user.providerData.forEach((profile) => { console.log(" Provider-specific UID: " + profile.uid); console.log(" Name: " + profile.displayName);
+        console.log(" Email: " + profile.email); console.log(" Password: " + profile.password); console.log(" score: " + "1"); const app = initializeApp(firebaseConfig); const database = getDatabase(app); var username = profile.displayName; var email
+        = profile.email;var name = email.substring(0,email.indexOf("@")); console.log(name); set(ref(database, 'users/' + name), { email: email,score:0,EndTime:0 }); }); } }); })()
+
+
+    </script>
+    <script>
+        function menuToggle() {
+            const toggleMenu = document.querySelector('.menu');
+            toggleMenu.classList.toggle('active')
+        }
+    </script>
+    <script src="firebase.js"></script>
+    <script type="module" src="main.mjs"></script>
+    <script src="home.js"></script>
+    <script type="module" src="leader.mjs"></script>
+</body>
+
+</html>
